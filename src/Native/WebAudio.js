@@ -1,4 +1,4 @@
-var _trotha01$elm_webaudio$Native_WebAudio = function() {
+var _user$project$Native_WebAudio = function() {
 
   var values = {};
 
