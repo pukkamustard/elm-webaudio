@@ -1,55 +1,70 @@
 module Main exposing (..)
 
-import WebAudio exposing (OscillatorNode, AudioContext(DefaultContext), stopOscillator, setValue, startOscillator, getDestinationNode, connectNodes, OscillatorWaveType(..), createOscillatorNode)
-import Html exposing (..)
+import Html as H
 import Html.Events exposing (onClick)
-import Html.App exposing (beginnerProgram)
 
 
--- Model
+--
+
+import WebAudio exposing (OscillatorNode, AudioContext(..), stopOscillator, setValue, startOscillator, getDestinationNode, connectNodes, OscillatorWaveType(..), createOscillatorNode)
 
 
-model =
-  0
-
-
-
--- Update
-
-
-type Action
-  = Play
-
-
-startMusic action model =
-  let
-    _ =
-      case action of
-        Play ->
-          createOscillatorNode DefaultContext Sine
-            |> connectNodes (getDestinationNode DefaultContext) 0 0
-            |> startOscillator 0.0
-            |> stopOscillator 1.0
-  in
-    model
-
-
-
--- View
-
-
-view address =
-  button [ onClick Play ] [ text "Play" ]
-
-
-
--- Main
-
-
+main : Program Never Model Msg
 main =
-  beginnerProgram
-    { model = model
-    , view = view
-    , update = startMusic
-    }
+    H.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
+
+
+-- MODEL
+
+
+type alias Model =
+    ()
+
+
+init : ( Model, Cmd Msg )
+init =
+    ( (), Cmd.none )
+
+
+
+-- UPDATE
+
+
+type Msg
+    = Play
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Play ->
+            (createOscillatorNode DefaultContext Sine
+                |> connectNodes (getDestinationNode DefaultContext) 0 0
+                |> startOscillator 0.0
+                |> stopOscillator 1.0
+            )
+                ! []
+
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
+
+
+-- VIEW
+
+
+view : Model -> H.Html Msg
+view model =
+    H.button [ onClick Play ] [ H.text "Play" ]
